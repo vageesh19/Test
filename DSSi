@@ -339,3 +339,35 @@ Note
 -----
 You will need to run Drupwn from the directory where the file is located.
 This can be done by running cd drupwn before entering the example command shown above.
+
+==============
+
+Banner grabbing with Netcat/Telnet
+Telnet and Netcat are common networking utility tools used to interact with network connections using TCP and UDP.
+We can use Netcat or Telnet to open a connection to the remote services which respond with their banners.
+Usage examples of both the Telnet and Netcat commands can be found below:
+
+# Grab the FTP banner using netcat
+nc -v 192.168.0.5 21
+ 
+# Grab the SSH banner using telnet
+telnet 192.168.0.5 22
+
+-----------------
+Banner grabbing with Curl
+Curl is a tool for transferring data to and from network servers. 
+We can use it with the -I option to show the header of the requested page. 
+We can then use grep to find the service header or banner. 
+Here's an example of a curl command that will grab the HTTP headers and a 
+grep command that will grab the service banner:
+
+curl -I 192.1.0.5 | grep -e “Server: ”
+-----------------------------
+Banner grabbing with Nmap
+Nmap has an Nmap Scripting Engine (NSE) script for banner grabbing, 
+which makes a connection to open TCP ports for a specified target and 
+then prints out anything sent by the listening service within five seconds. 
+
+nmap -sV --script=banner 192.1.0.5
+
+---------------------------
