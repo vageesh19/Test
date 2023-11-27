@@ -23,3 +23,13 @@ https://github.com/cmuppin/CEH/blob/main/Android
 
 8) Metasploit
 If you get any questions related to netbios, SMB use metasploit.
+
+Windows based Commands which will help you to find the answers.
+1) net user — For Domain Users Enumeration
+2) snow.exe -C -p “password” stegfile.txt
+3) type C:\path.txt — It displays the content of the path.txt file.
+4) dir
+5) cd
+6) hostname
+7) whoami
+8) PWd
