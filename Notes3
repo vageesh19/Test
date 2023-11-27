@@ -33,3 +33,5 @@ Windows based Commands which will help you to find the answers.
 6) hostname
 7) whoami
 8) PWd
+
+ Open the cryptool on top, click on encryption / decryption and then click on asymmetric and select tripe des ecb and set 11 11 11 in all. But first please open that file in the tool they ask us to perform the decryption decryption
